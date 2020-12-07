@@ -5,6 +5,7 @@ const port = 3000
 
 const productsAPI = require('./api/router/products.router')
 const clotheAPI = require('./api/router/clothes.router')
+const cartAPI = require('./api/router/carts.router')
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/Shopping', { useFindAndModify: false, useCreateIndex: false });
@@ -19,6 +20,9 @@ app.use(cors())
 app.use('/products', productsAPI)
 
 app.use('/clothes', clotheAPI)
+
+app.use('/carts', cartAPI)
+
 
 
 app.listen(port, () => {
