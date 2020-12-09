@@ -9,5 +9,8 @@ router.get('/:id', carts.index)
 
 router.patch('/:id', carts.updateCount)
 
+router.post('/:id', carts.addCarts)
+
+router.delete('/:id', carts.deleteCarts)
 
 module.exports = router
