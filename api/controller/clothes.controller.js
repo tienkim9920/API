@@ -33,3 +33,33 @@ module.exports.detail = async (req, res) => {
     res.json(findProduct)
 
 }
+
+module.exports.pagination = async (req, res) => {
+
+    var page = parseInt(req.query.page) || 1
+
+    var numberProduct = parseInt(req.query.count) || 1
+
+    var keyWordSearch = req.query.search
+
+    var start = (page - 1) * numberProduct
+    var end = page * numberProduct
+
+    var clothes = await Clothes.find()
+    
+    var paginationProducts = clothes.slice(start, end)
+
+
+    if (!keyWordSearch){
+        
+        res.json(paginationProducts)
+
+    }else{
+        var newData = paginationProducts.filter(value => {
+            return value.name.toUpperCase().indexOf(keyWordSearch.toUpperCase()) !== -1
+        })
+    
+        res.json(newData)
+    }
+
+}
