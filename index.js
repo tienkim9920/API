@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+var cookieParser = require('cookie-parser');
 const cors = require('cors');
 const port = 3000
 
@@ -17,6 +18,7 @@ app.use(bodyParser.json())
 
 //Cài Đặt Cors và thêm này vào
 app.use(cors())
+app.use(cookieParser());
 
 app.use('/products', productsAPI)
 

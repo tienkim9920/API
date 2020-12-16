@@ -7,6 +7,6 @@ var accounts = require('../controller/accounts.controller')
 
 router.get('/', accounts.index)
 
-router.post('/', accounts.signup)
+router.post('/signup/', accounts.signup)
 
 module.exports = router
