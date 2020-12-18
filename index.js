@@ -9,6 +9,7 @@ const clotheAPI = require('./api/router/clothes.router')
 const cartAPI = require('./api/router/carts.router')
 const accountAPI = require('./api/router/accounts.router')
 const emailAPI = require('./api/router/email.router')
+const historyAPI = require('./api/router/history.router')
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/Shopping', { useFindAndModify: false, useCreateIndex: false });
@@ -30,6 +31,8 @@ app.use('/carts', cartAPI)
 app.use('/accounts', accountAPI)
 
 app.use('/email', emailAPI)
+
+app.use('/history', historyAPI)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

@@ -2,6 +2,7 @@
 const mailer = require('../../mailer')
 
 const Carts = require('../../models/carts.model')
+const History = require('../../models/history.model')
 
 module.exports.sendmail = async (req, res) => {
 
@@ -9,17 +10,20 @@ module.exports.sendmail = async (req, res) => {
 
         // Lấy data truyền lên từ form phía client
         const to = req.query.to
+        const subject = 'Hóa Đơn Đặt Hàng'
+        
         const fullname = req.query.fullname
         const phone = req.query.phone
         const address = req.query.address
         const idUser = req.query.idUser
-        const subject = 'Hóa Đơn Đặt Hàng'
+        const status = false
 
+        //Tìm những sản phẩm User đã thêm hàng
         const cartsUser = await Carts.find({idUser: idUser})
 
         let total = 0
 
-        let sum = cartsUser.map(value => {
+        cartsUser.map(value => {
             return total += parseInt(value.price) * parseInt(value.count)
         })
 
@@ -43,8 +47,38 @@ module.exports.sendmail = async (req, res) => {
         // Thực hiện gửi email (to, subject, htmlContent)
         await mailer.sendMail(to, subject, htmlResult)
 
+
+
+        //-----------Xứ Lý Xóa Những Sản Phẩm Trong Bảng Cart và Chuyển Sang Bảng History---------------//
+        let carts = []
+
+        cartsUser.map(value => {
+            return carts.push(value)
+        })
+
+        const data = {
+            idUser: idUser,
+            fullname: fullname,
+            phone: phone,
+            address: address,
+            cart: carts,
+            total: total,
+            status: status
+        }
+
+        // //Insert data vào Bảng History
+        History.insertMany(data)
+
+        // //Xóa những sản phẩm trong Bảng Cart
+        Carts.deleteMany({ idUser: idUser }).then(function(){ 
+            res.send("Thanh Cong")
+        }).catch(function(error){ 
+            res.send(error);
+        });
+
+
         // Quá trình gửi email thành công thì gửi về thông báo success cho người dùng
-        res.send('<h3>Your email has been sent successfully.</h3>')
+        // res.send('<h3>Your email has been sent successfully.</h3>')
 
     } catch (error) {
         // Nếu có lỗi thì log ra để kiểm tra và cũng gửi về client
